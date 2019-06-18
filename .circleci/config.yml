@@ -18,15 +18,24 @@ jobs:
       name: "test-orb/php"
 
     steps:
+      #
       - *fast-checkout
 
+      #
+      - restore_cache:
+          keys:
+            - composer-project-v1-{{ checksum "composer.json" }}
+            - composer-project-v1-
       - test-orb/composer-install
-          scope: "project"
+      - save_cache:
           paths:
-            - "./vendor"
-            - "./public/packages/d_p_*"
+            - ./vendor
+            - ./public/packages/d_p_*
+          key: composer-project-v1-{{ checksum "composer.json" }}
 
-      
+      #- test-orb/composer-install:
+          #path: "./public/concrete"
+          #scope: "concrete"
   
   #
   deploy:
