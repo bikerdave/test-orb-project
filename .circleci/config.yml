@@ -19,7 +19,7 @@ jobs:
       tag: "7.1"
 
     steps:
-      - run: "test-orb/checkout-persist"
+      - test-orb/checkout-persist
 
 
   #
