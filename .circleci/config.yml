@@ -21,9 +21,12 @@ jobs:
       - *fast-checkout
 
       - test-orb/composer-install
+          scope: "project"
+          paths:
+            - "./vendor"
+            - "./public/packages/d_p_*"
 
-      - test-orb/composer-install:
-          path: "./public/concrete"
+      
   
   #
   deploy:
@@ -45,12 +48,13 @@ workflows:
   # build workflow
   build-and-deploy:
     jobs:
-      - test-orb/temp
+      # default jobs
+      - test-orb/checkout
       - build:
           requires:
-            - test-orb/temp
+            - test-orb/checkout
 
-      # staging workflow
+      # staging deploy
       - deploy:
           requires:
             - build
@@ -58,3 +62,12 @@ workflows:
             branches:
               only:
                 - develop
+
+      # production deploy
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
