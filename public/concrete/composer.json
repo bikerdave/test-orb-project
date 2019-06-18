@@ -1,0 +1,5 @@
+{
+    "require": {
+        "martin-pettersson/chalk": "^0.1.3"
+    }
+}
