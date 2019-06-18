@@ -1,12 +1,12 @@
 version: 2.1
 
 orbs:
-  test-orb: bikerdave/test-orb@dev:first
+  test-orb: "bikerdave/test-orb@dev:first"
 
 jobs:
   build:
     executor:
-      name: test-orb/php
+      name: "test-orb/php"
 
     steps:
       - checkout
@@ -14,4 +14,4 @@ jobs:
       - test-orb/composer-install
 
       - test-orb/composer-install:
-          path: './public/concrete'
+          path: "./public/concrete"
