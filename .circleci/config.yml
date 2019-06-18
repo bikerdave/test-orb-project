@@ -13,16 +13,6 @@ reattach: &reattach
 ##
 jobs:
   #
-  fast-checkout:
-    executor:
-      name: "test-orb/php"
-      tag: "7.1"
-
-    steps:
-      - test-orb/checkout-persist
-
-
-  #
   build:
     executor:
       name: "test-orb/php"
@@ -30,23 +20,18 @@ jobs:
 
     steps:
       # checkout source code
-      - *reattach
+      - checkout
+      - run: "rm -rf .git"
 
       #
-      - restore_cache:
-          keys:
-            - composer-project-v1-{{ checksum "composer.json" }}
-            - composer-project-v1-
-      - test-orb/composer-install
-      - save_cache:
-          paths:
-            - ./vendor
-            - ./public/packages/d_p_*
-          key: composer-project-v1-{{ checksum "composer.json" }}
+      - test-orb/test
+      
 
       #- test-orb/composer-install:
           #path: "./public/concrete"
           #scope: "concrete"
+
+      - test-orb/persist
   
   #
   deploy:
@@ -56,7 +41,8 @@ jobs:
 
     steps:
       # checkout source code
-      - *reattach
+      - attach_workspace:
+          at: ~/tmp/build
 
       - run: echo Hello World
 
@@ -70,11 +56,8 @@ workflows:
   # build workflow
   build-and-deploy:
     jobs:
-      # default jobs
-      - fast-checkout
-      - build:
-          requires:
-            - fast-checkout
+      # default job
+      - build
 
       # staging deploy
       - deploy:
