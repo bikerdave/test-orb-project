@@ -28,18 +28,26 @@ workflows:
   version: 2.1
   build:
     jobs:
-      - jobo
+      - jobo:
+          filters:
+            branches:
+              ignore:
+                - develop
+                - master
+
 
   build-additional:
     jobs:
       - jobo:
           filters:
             branches:
-              only: develop
+              only:
+                - develop
 
       - jobt:
           requires:
             - jobo
           filters:
             branches:
-              only: develop
+              only:
+                - develop
