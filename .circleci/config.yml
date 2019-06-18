@@ -3,9 +3,15 @@ version: 2.1
 orbs:
   test-orb: bikerdave/test-orb@dev:first
 
+# Default settings used for all jobs
+defaults: &defaults
+  docker:
+    - image: circleci/php:7.1-cli-node-browsers
+  working_directory: ~/tmp/build
+
 jobs:
   build:
-    machine: true
+    <<: *defaults
     
     steps:
       - test-orb/hello:
