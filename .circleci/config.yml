@@ -9,9 +9,9 @@ jobs:
     
     steps:
       - test-orb/hello:
-        username: 'JON'
+          username: 'JON'
 
       - test-orb/composer-install
 
-      - test-orb/composer-install
-        path: './public/concrete'
+      - test-orb/composer-install:
+          path: './public/concrete'
