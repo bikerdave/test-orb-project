@@ -43,47 +43,12 @@ workflows:
   version: 2
 
   # build workflow
-  build-stuff:
+  build-and-deploy:
     jobs:
       - test-orb/temp
+      - build
 
-      - build:
-          filters:
-            branches:
-              ignore:
-                - develop
-                - master
-
-  # staging workflow
-  build-deploy-staging:
-    jobs:
-      - test-orb/temp
-
-      - build:
-          filters:
-            branches:
-              only:
-                - develop
-
-      - deploy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - develop
-
-  # live workflow
-  build-deploy-production:
-    jobs:
-      - test-orb/temp
-
-      - build:
-          filters:
-            branches:
-              only:
-                - develop
-
+      # staging workflow
       - deploy:
           requires:
             - build
