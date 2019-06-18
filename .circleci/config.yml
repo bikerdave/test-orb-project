@@ -4,7 +4,7 @@ orbs:
   test-orb: "bikerdave/test-orb@dev:first"
 
 jobs:
-  build:
+  jobo:
     executor:
       name: "test-orb/php"
 
@@ -12,6 +12,31 @@ jobs:
       - checkout
 
       - test-orb/composer-install
+  
+  jobt:
+    executor:
+      name: "test-orb/php"
+
+    steps:
+      - checkout
 
       - test-orb/composer-install:
           path: "./public/concrete"
+
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - jobo
+
+  build-additional:
+    jobs:
+      - jobo
+
+      - jobt:
+          requires:
+            - jobo
+          filters:
+            branches:
+              only: develop
