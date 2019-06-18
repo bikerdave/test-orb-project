@@ -32,7 +32,10 @@ workflows:
 
   build-additional:
     jobs:
-      - jobo
+      - jobo:
+          filters:
+            branches:
+              only: develop
 
       - jobt:
           requires:
