@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   test-orb: "bikerdave/test-orb@dev:first"
 
-fast-checkout: &fast-checkout
+reattach: &reattach
   attach_workspace:
     at: ~/tmp/build
 
@@ -13,13 +13,24 @@ fast-checkout: &fast-checkout
 ##
 jobs:
   #
+  fast-checkout:
+    executor:
+      name: "test-orb/php"
+      tag: "7.1"
+
+    steps:
+      - run: "test-orb/checkout-persist"
+
+
+  #
   build:
     executor:
       name: "test-orb/php"
+      tag: "7.1"
 
     steps:
-      #
-      - *fast-checkout
+      # checkout source code
+      - *reattach
 
       #
       - restore_cache:
@@ -41,9 +52,11 @@ jobs:
   deploy:
     executor:
       name: "test-orb/php"
+      tag: "7.1"
 
     steps:
-      - *fast-checkout
+      # checkout source code
+      - *reattach
 
       - run: echo Hello World
 
@@ -58,10 +71,10 @@ workflows:
   build-and-deploy:
     jobs:
       # default jobs
-      - test-orb/checkout
+      - fast-checkout
       - build:
           requires:
-            - test-orb/checkout
+            - fast-checkout
 
       # staging deploy
       - deploy:
