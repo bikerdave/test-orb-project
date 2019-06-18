@@ -46,7 +46,9 @@ workflows:
   build-and-deploy:
     jobs:
       - test-orb/temp
-      - build
+      - build:
+          requires:
+            - test-orb/temp
 
       # staging workflow
       - deploy:
