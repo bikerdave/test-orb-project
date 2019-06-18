@@ -3,50 +3,90 @@ version: 2.1
 orbs:
   test-orb: "bikerdave/test-orb@dev:first"
 
+fast-checkout: &fast-checkout
+  attach_workspace:
+    at: ~/tmp/build
+
+
+##
+## JOBS
+##
 jobs:
-  jobo:
+  #
+  build:
     executor:
       name: "test-orb/php"
 
     steps:
-      - checkout
+      - *fast-checkout
 
       - test-orb/composer-install
-  
-  jobt:
-    executor:
-      name: "test-orb/php"
-
-    steps:
-      - checkout
 
       - test-orb/composer-install:
           path: "./public/concrete"
+  
+  #
+  deploy:
+    executor:
+      name: "test-orb/php"
+
+    steps:
+      - *fast-checkout
+
+      - run: echo Hello World
 
 
+##
+## WORKFLOWS
+##
 workflows:
-  version: 2.1
-  build:
+  version: 2
+
+  # build workflow
+  build-stuff:
     jobs:
-      - jobo:
+      - test-orb/temp
+
+      - build:
           filters:
             branches:
               ignore:
                 - develop
                 - master
 
-
-  build-additional:
+  # staging workflow
+  build-deploy-staging:
     jobs:
-      - jobo:
+      - test-orb/temp
+
+      - build:
           filters:
             branches:
               only:
                 - develop
 
-      - jobt:
+      - deploy:
           requires:
-            - jobo
+            - build
+          filters:
+            branches:
+              only:
+                - develop
+
+  # live workflow
+  build-deploy-production:
+    jobs:
+      - test-orb/temp
+
+      - build:
+          filters:
+            branches:
+              only:
+                - develop
+
+      - deploy:
+          requires:
+            - build
           filters:
             branches:
               only:
