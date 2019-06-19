@@ -33,8 +33,7 @@ jobs:
       - test-orb/npm-install
       
       #
-      - test-orb/composer-concrete-install:
-          path: "./public/concrete"
+      - test-orb/composer-concrete-install
 
       #
       - test-orb/persist
