@@ -20,7 +20,6 @@ jobs:
     steps:
       # checkout source code
       - checkout
-      # - run: "rm -rf .git"
 
       # 
       - test-orb/npm-install
@@ -40,9 +39,8 @@ jobs:
 
     steps:
       #
-      - test-orb/reattach
-
-      - run: echo Staging
+      - test-orb/deploy:
+          ip: "123.456.789"
   
   #
   deploy-production:
@@ -50,9 +48,8 @@ jobs:
 
     steps:
       #
-      - test-orb/reattach
-
-      - run: echo Production
+      - test-orb/deploy:
+          ip: "987.654.321"
 
 
 ##
