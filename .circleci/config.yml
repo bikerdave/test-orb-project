@@ -8,10 +8,6 @@ machine: &machine
       name: "test-orb/php"
       tag: "7.1"
 
-reattach: &reattach
-  attach_workspace:
-    at: ~/tmp/build
-
 
 ##
 ## JOBS
@@ -30,23 +26,33 @@ jobs:
       - test-orb/npm-install
 
       #
-      - test-orb/composer-project-install:
-          version: 2
+      - test-orb/composer-project-install
 
-      - test-orb/composer-concrete-install:
-          version: 3
+      #
+      - test-orb/composer-concrete-install
 
       #
       - test-orb/persist
   
   #
-  deploy:
+  deploy-staging:
     <<: *machine
 
     steps:
-      - *reattach
+      #
+      - test-orb/reattach
 
-      - run: echo Hello World
+      - run: echo Staging
+  
+  #
+  deploy-production:
+    <<: *machine
+
+    steps:
+      #
+      - test-orb/reattach
+
+      - run: echo Production
 
 
 ##
@@ -62,7 +68,7 @@ workflows:
       - build
 
       # staging deploy
-      - deploy:
+      - deploy-staging:
           requires:
             - build
           filters:
@@ -71,7 +77,7 @@ workflows:
                 - develop
 
       # production deploy
-      - deploy:
+      - deploy-production:
           requires:
             - build
           filters:
