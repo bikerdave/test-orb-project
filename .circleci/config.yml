@@ -30,8 +30,11 @@ jobs:
       - test-orb/npm-install
 
       #
-      - test-orb/composer-project-install
-      - test-orb/composer-concrete-install
+      - test-orb/composer-project-install:
+          version: 2
+
+      - test-orb/composer-concrete-install:
+          version: 3
 
       #
       - test-orb/persist
