@@ -3,6 +3,11 @@ version: 2.1
 orbs:
   test-orb: "bikerdave/test-orb@dev:first"
 
+machine: &machine
+  executor:
+      name: "test-orb/php"
+      tag: "7.1"
+
 reattach: &reattach
   attach_workspace:
     at: ~/tmp/build
@@ -14,35 +19,32 @@ reattach: &reattach
 jobs:
   #
   build:
-    executor:
-      name: "test-orb/php"
-      tag: "7.1"
+    <<: *machine
 
     steps:
       # checkout source code
       - checkout
-      - run: "rm -rf .git"
+      # - run: "rm -rf .git"
 
       #
-      - test-orb/test
+      - test-orb/composer-project-install
+
+      #
+      - test-orb/npm-install
       
+      #
+      - test-orb/composer-concrete-install:
+          path: "./public/concrete"
 
-      #- test-orb/composer-install:
-          #path: "./public/concrete"
-          #scope: "concrete"
-
+      #
       - test-orb/persist
   
   #
   deploy:
-    executor:
-      name: "test-orb/php"
-      tag: "7.1"
+    <<: *machine
 
     steps:
-      # checkout source code
-      - attach_workspace:
-          at: ~/tmp/build
+      - *reattach
 
       - run: echo Hello World
 
