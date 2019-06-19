@@ -26,13 +26,11 @@ jobs:
       - checkout
       # - run: "rm -rf .git"
 
-      #
-      - test-orb/composer-project-install
+      # 
+      - test-orb/npm-install
 
       #
-      - test-orb/npm-install
-      
-      #
+      - test-orb/composer-project-install
       - test-orb/composer-concrete-install
 
       #
