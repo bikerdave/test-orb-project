@@ -41,15 +41,17 @@ jobs:
       #
       - test-orb/deploy:
           ip: "123.456.789"
+          action: "staging"
   
   #
-  deploy-production:
+  deploy-live:
     <<: *machine
 
     steps:
       #
       - test-orb/deploy:
           ip: "987.654.321"
+          action: "live"
 
 
 ##
@@ -73,8 +75,8 @@ workflows:
               only:
                 - develop
 
-      # production deploy
-      - deploy-production:
+      # live deploy
+      - deploy-live:
           requires:
             - build
           filters:
